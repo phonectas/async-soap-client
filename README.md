@@ -35,7 +35,6 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 	'logs/api-consumer.log'
     );
     $promise = $client->someSoapAction($params)->then(function ($response) use ($log) { //someSoapAction == SOAPAction
-	$log->info((string)$response->getBody(), array('status' => $response->getStatusCode()));
 	return (string)$response->getBody();
     }, function ($exception) use ($params, $log) {
 	$log->error($e->getMessage());
