@@ -21,24 +21,5 @@
 		"syntax": "bash ./phplint.sh",
 		"test": "bash vendor/bin/phpunit -c phpunit.xml.dist",
 		"post-install-cmd": "vendor/bin/phpunit -c phpunit.xml.dist"
-	},
-	"repositories": [
-		{
-			"type": "package",
-			"package": {
-				"name": "phonectas/async-soap-client",
-				"version": "dev-master",
-				"source": {
-					"url": "git://github.com:phonectas/async-soap-client.git",
-					"type": "git",
-					"reference": "master"
-				},
-				"autoload": {
-					"psr-0": {
-						"Phonect": "src"
-					}
-				}
-			}
-		}
-	]
+	}
 }
