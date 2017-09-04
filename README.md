@@ -29,11 +29,11 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 		]
 	];
 	$client = Client::createInstance(
-			'https://example.com/api/service?wsdl',
-			'http://example.com',
+			'https://example.com/api/service?wsdl', //soap api path
+			'http://example.com', //soap namespace
 			'logs/api-consumer.log' //Here log entries are stored under laravels storage path. 
 	);
-	$promise = $client->setIvrIntro($params)->then(function ($response) {
+	$promise = $client->someSoapAction($params)->then(function ($response) { //someSoapAction == SOAPAction
 		Log::info((string)$response->getBody(), array('status' => $response->getStatusCode()));
 		return (string)$response->getBody();
 	}, function ($exception) use ($params) {
