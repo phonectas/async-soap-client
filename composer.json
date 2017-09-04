@@ -1,5 +1,5 @@
 {
-	"name": "Phonect/SOAP",
+	"name": "phonect/async-soap-client",
 	"description": "A SOAP client that can do Asynchronous SOAP calls",
 	"keywords": ["phonect", "soap", "client"],
 	"license": "Copyright (c) 2017 Phonect AS",
@@ -26,7 +26,7 @@
 		{
 			"type": "package",
 			"package": {
-				"name": "Phonect/SOAP",
+				"name": "phonect/async-soap-client",
 				"version": "dev-master",
 				"source": {
 					"url": "git://github.com:phonectas/async-soap-client.git",
