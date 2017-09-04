@@ -1,8 +1,6 @@
 <?php
 namespace Phonect\SOAP;
 
-use Illuminate\Support\Facades\Log;
-
 class Client {
 		private static $logger;
 		private static $baseUri;

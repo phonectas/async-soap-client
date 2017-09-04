@@ -19,6 +19,7 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 ### Usage:
 
     use Phonect\SOAP\Client;
+    use Monlog\Logger as Log;
 
     $params = [
 		"id" => 123,
