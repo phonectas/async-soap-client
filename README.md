@@ -18,9 +18,14 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 
 ### Usage:
 
+```php
     use Phonect\SOAP\Client;
-    use Monlog\Logger as Log;
+	use Monolog\Logger;
+	use Monolog\Handler\StreamHandler;
 
+	// create a log channel
+	$log = new Logger('name');
+	$log->pushHandler(new StreamHandler('path/to/your.log', Logger::INFO));
     $params = [
 		"id" => 123,
 		'file' => [
@@ -32,13 +37,13 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 	$client = Client::createInstance(
 			'https://example.com/api/service?wsdl', //soap api path
 			'http://example.com', //soap namespace
-			'logs/api-consumer.log' //Here log entries are stored under laravels storage path. 
+			'logs/api-consumer.log'
 	);
-	$promise = $client->someSoapAction($params)->then(function ($response) { //someSoapAction == SOAPAction
-		Log::info((string)$response->getBody(), array('status' => $response->getStatusCode()));
+	$promise = $client->someSoapAction($params)->then(function ($response) use ($log) { //someSoapAction == SOAPAction
+		$log->info((string)$response->getBody(), array('status' => $response->getStatusCode()));
 		return (string)$response->getBody();
-	}, function ($exception) use ($params) {
-		Log::error($e->getMessage(),
+	}, function ($exception) use ($params, $log) {
+		$log->error($e->getMessage(),
 			array(
 				'file' => $e->getFile(),
 				'line' => $e->getLine(),
@@ -55,3 +60,4 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 	});
 	//Echo the response
 	echo $promise->wait():
+```
