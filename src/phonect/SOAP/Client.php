@@ -1,5 +1,8 @@
 <?php
 namespace Phonect\SOAP;
+use GuzzleHttp\Promise\FulfilledPromise;
+use Psr\Http\Message\ResponseInterface as Response;
+use GuzzleHttp\Middleware;
 
 class Client {
 		private static $logger;
@@ -7,14 +10,31 @@ class Client {
 		private $xmlns;
 		private $client;
 		
+		/**
+		 * @param string $baseUri
+		 * @param string $xmlns
+		 * @param string $logFile
+		 * @param int 	 $connectionTimeout
+		 * @param int 	 $readTimeout
+		 * @param int 	 $timeout
+		 * @return Phonect\SOAP\Client
+		 */
 		public static function createInstance($baseUri, $xmlns, $logFile, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
 			self::$baseUri = $baseUri;
-			return new self($baseUri, $xmlns, self::createLoggingHandlerStack([
+			return new self($baseUri, $xmlns, self::createHandlerStack([
 				'{method} {uri} HTTP/{version}',
 				'RESPONSE: {code}'
 			], $logFile), $connectionTimeout, $readTimeout, $timeout);
-		}
+		} //GuzzleHttp\HandlerStack
 		
+		/**
+		 * @param string 				  $baseUri
+		 * @param string 				  $xmlns
+		 * @param GuzzleHttp\HandlerStack $logHandler
+		 * @param int 					  $connectionTimeout
+		 * @param int 					  $readTimeout
+		 * @param int 	 				  $timeout
+		 */
 		public function __construct($baseUri, $xmlns, $logHandler = null, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
 			$config = [
 				'base_uri' => self::$baseUri,
@@ -29,6 +49,9 @@ class Client {
 			$this->client = new \GuzzleHttp\Client($config);
 		}
 		
+		/**
+		 * @return Guzzle\Http\Client
+		 */
 		public function getClient() {
 			return $this->client;
 		}
@@ -36,8 +59,8 @@ class Client {
 		/**
 		 * Convienience method for using soap actions directly on the client.
 		 * @example ```php Phonect\SOAP\Client::getClient()->soapAction($parameters);```
-		 * @param       string $soapAction the SOAP action
-		 * @param       array $arguments   the method arguments
+		 * @param string $soapAction the SOAP action
+		 * @param array $arguments   the method arguments
 		 * @return Promise @see http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests
 		 */
 		public function __call($soapAction, $arguments) {
@@ -100,9 +123,12 @@ class Client {
 			}
 		}
 		
-		private static function createLoggingHandlerStack(array $messageFormats, $logFile) {
+		private static function createHandlerStack(array $messageFormats, $logFile) {
 		    $stack = \GuzzleHttp\HandlerStack::create();
-			
+			$stack->unshift(Middleware::mapResponse(function (Response $response) {
+				$soapStream = new SoapStream($response->getBody());
+				return $response->withBody($soapStream);
+			}));
 			foreach ($messageFormats as $messageFormat) {
 		        // We'll use unshift instead of push, to add the middleware to the bottom of the stack, not the top
 		        $stack->unshift(
