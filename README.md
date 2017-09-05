@@ -43,7 +43,7 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
     echo $promise->wait();
 
     $promise = $client->someSoapAction($params)->then(function ($response) use ($log) { //someSoapAction == SOAPAction
-    	//returning the node named return ex. "<return><value>test</value></return>" as an object formated as: {'return': ['value': 'test'] or null if return doesn't exist
+    		//returning the node named return ex. "<return><value>test</value></return>" as an object formated as: {'return': ['value': 'test'] or null if return doesn't exist
 		return (string)$response->getBody()->soapSerialize(); 
     }, function ($exception) use ($params, $log) {
 		$log->error($e->getMessage());
