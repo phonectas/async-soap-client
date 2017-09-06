@@ -30,12 +30,12 @@ class Client {
 		/**
 		 * @param string 				  $baseUri
 		 * @param string 				  $xmlns
-		 * @param GuzzleHttp\HandlerStack $logHandler
+		 * @param GuzzleHttp\HandlerStack                 $handler
 		 * @param int 					  $connectionTimeout
 		 * @param int 					  $readTimeout
 		 * @param int 	 				  $timeout
 		 */
-		public function __construct($baseUri, $xmlns, $logHandler = null, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
+		public function __construct($baseUri, $xmlns, $handler = null, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
 			$config = [
 				'base_uri' => self::$baseUri,
 				'connection_timeout' =>  $connectionTimeout,
