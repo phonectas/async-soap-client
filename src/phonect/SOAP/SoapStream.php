@@ -19,25 +19,26 @@ class SoapStream implements StreamInterface
 	try {
 		$xml = simplexml_load_string($contents);
 		$match = $xml->xpath('//return');
-
 		if (empty($match)) {
 		  return null;
 		}
-		$json = json_encode($match[0]);
-
+		$data = [];
+		foreach ($match as $item) {
+			$data[] = $item;
+		}
+		$json = json_encode($data);
 		if (empty($json)) {
 		  return null;
 		}
 		$return = json_decode($json,true);
-
 		if (empty($return)) {
 		  return null;
 		}
-		if (!empty($return[0])) {
+		if (count($return) == 1) {
 		  $return = $return[0];
 		}
-
-		return (object) ['return' => $return];
+		$response = (object) ['return' => $return];
+		return $response;
 	} catch (\Exception $e) {
 		throw new RuntimeException(
 			'Error trying to decode response: ' .
