@@ -123,16 +123,17 @@ class Client {
 			}
 		}
 		
-		private static function createHandlerStack(array $messageFormats, $logFile) {
+		public static function createHandlerStack(array $messageFormats, $logFile) {
 		    $stack = \GuzzleHttp\HandlerStack::create();
 			$stack->unshift(Middleware::mapResponse(function (Response $response) {
 				$soapStream = new SoapStream($response->getBody());
 				return $response->withBody($soapStream);
-			}));
+			}), 'soap');
 			foreach ($messageFormats as $messageFormat) {
 		        // We'll use unshift instead of push, to add the middleware to the bottom of the stack, not the top
 		        $stack->unshift(
-		            self::createGuzzleLoggingMiddleware($messageFormat, $logFile)
+		            self::createGuzzleLoggingMiddleware($messageFormat, $logFile),
+			    'logger'
 		        );
 			}
 		    return $stack;
