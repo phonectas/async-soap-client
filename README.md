@@ -59,25 +59,25 @@ see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-
 ### Adding Guzzle Handlers and middleware
 See: [documentation](http://docs.guzzlephp.org/en/stable/handlers-and-middleware.html)
 
-Here is how you can add a your owen soap xml handler
+Here is how you can add a your owen soap xml handler or log handler
 ```php
 	use Phonect\SOAP\Client;
 	use GuzzleHttp\Handler\MockHandler;
 	use GuzzleHttp\Psr7\Response;
-	
+
 	$stack = Client::createHandlerStack([
 		'{method} {uri} HTTP/{version}',
 		'RESPONSE: {code}'
 	], '/tmp/logger.log');
-	
+
 	//add soap handler
 	$stack->remove('soap');
 	$stack->unshift(Middleware::mapResponse(function (Response $response) {
-	    //example see: https://github.com/phonectas/async-soap-client/blob/master/src/phonect/SOAP/SoapStream.php
+		//example see: https://github.com/phonectas/async-soap-client/blob/master/src/phonect/SOAP/SoapStream.php
 		$yourSoapStream = new YourSoapHandler($response->getBody());
 		return $response->withBody($yourSoapStream);
 	}), 'soap');
-	
+
 	//overwrite existing log handler
 	$stack->remove('logger');
 	$stack->unshift(
@@ -85,14 +85,14 @@ Here is how you can add a your owen soap xml handler
 			(new \Monolog\Logger('soap-api-consumer'))->pushHandler(
 				new \Monolog\Handler\RotatingFileHandler('/tmp/logger.log')
 			),
-			new \GuzzleHttp\MessageFormatter($messageFormat)
+			new \GuzzleHttp\MessageFormatter(['{method} {uri} HTTP/{version}', 'RESPONSE: {code}'])
 		),
 		'logger'
 	);
-	
+
 	$client = new Client(
 		'https://www.example.com/phonect-api/PhonectAPIService?wsdl',
 		'http://service.phonect.no/',
 		$stack 
-    );
+	);
 ```
