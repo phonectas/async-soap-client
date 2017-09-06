@@ -7,17 +7,9 @@ The client uses Guzzle and Guzzle promises to make soap requests.
 see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests);
 
 ### Install:
-    {
-    "repositories": [
-        {
-            "type": "vcs",
-	    "url": "https://github.com/phonectas/async-soap-client"
-        }
-    },
-    "require": {
-    	 "phonectas/async-soap-client": "^1.0"
-    }
-    }
+
+    composer require phonectas/async-soap-client
+
 ### Basic usage:
 
 ```php
