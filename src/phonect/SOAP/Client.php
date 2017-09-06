@@ -43,7 +43,7 @@ class Client {
 				'timeout' => $timeout
 			];
 			if ($logHandler) {
-				$config['handler'] = $logHandler;
+				$config['handler'] = $handler;
 			}
 			$this->xmlns = $xmlns;
 			$this->client = new \GuzzleHttp\Client($config);
