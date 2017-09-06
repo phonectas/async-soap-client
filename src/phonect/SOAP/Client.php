@@ -42,7 +42,7 @@ class Client {
 				'read_timeout' => $readTimeout,
 				'timeout' => $timeout
 			];
-			if ($logHandler) {
+			if ($handler) {
 				$config['handler'] = $handler;
 			}
 			$this->xmlns = $xmlns;
