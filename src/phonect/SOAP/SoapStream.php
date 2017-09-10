@@ -23,6 +23,10 @@ class SoapStream implements StreamInterface
 		  return null;
 		}
 		$data = [];
+		if (count($match) == 1) {
+			$data = $match[0];
+			$match = array();
+		}
 		foreach ($match as $item) {
 			$data[] = $item;
 		}
@@ -34,15 +38,15 @@ class SoapStream implements StreamInterface
 		if (empty($return)) {
 		  return null;
 		}
-		if (count($return) == 1) {
-		  $return = $return[0];
+		if (!empty($return[0]) && count($return) == 1 && !is_array($return[0])) {
+		  $return = array_pop($return);
 		}
 		$response = (object) ['return' => $return];
 		return $response;
 	} catch (\Exception $e) {
 		throw new RuntimeException(
 			'Error trying to decode response: ' .
-			$e->getMessage(),
+			$e->getMessage() . ', line: ' . $e->getLine(),
 			500,
 			$e
 		);

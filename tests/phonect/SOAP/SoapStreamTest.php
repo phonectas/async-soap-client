@@ -24,6 +24,7 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
         $expectedObject = $expectedArray ? (object) $expectedArray : null;
         $soapStream = $this->getSoapStream($string);
         $object = $soapStream->soapSerialize();
+
         $this->assertEquals($expectedObject, $object);
     }
 
@@ -46,6 +47,24 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
     <soap:Body>
         <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
             <return><person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person></return>
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ],
+            [
+                'expectedArray' => ['return' => [
+                    ['person' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123]],
+                    ['person' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123]]
+                ]],
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+            <return>
+            <person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person>
+            </return>
+            <return>
+            <person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person>
+            </return>
         </ns2:addPersonResponse>
     </soap:Body>
 </soap:Envelope>',
