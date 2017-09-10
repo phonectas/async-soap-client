@@ -70,6 +70,40 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
 </soap:Envelope>',
             ],
             [
+                'expectedArray' => ['return' =>
+                    ['person' => [
+                        ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123],
+                        ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123]
+                    ]],
+                ],
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+            <return>
+            <person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person>
+            <person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person>
+            </return>
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ],
+            [
+                'expectedArray' => ['return' => [
+                    'person' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123],
+                    'admin' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123]
+                ]],
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+            <return>
+            <person><name><first>Phonect</first><last>Nisse</last></name><id>123</id></person>
+            <admin><name><first>Phonect</first><last>Nisse</last></name><id>123</id></admin>
+            </return>
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ],
+            [
                 'expectedArray' => null,
                 'string' => '',
             ],
