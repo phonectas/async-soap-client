@@ -17,5 +17,5 @@ install:
   - composer install --dev
 
 script:
-  - composer run-script syntax
-  - composer run-script test 
+  - phplint.sh
+  - vendor/bin/phpunit -c phpunit.xml.dist
