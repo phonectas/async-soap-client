@@ -1,5 +1,4 @@
 vendor
-.*.*
 *.swp
 *.*~
 api-consumer-*.log
