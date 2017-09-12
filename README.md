@@ -1,6 +1,7 @@
 ## A SOAP client that can do Asynchronous SOAP calls
 
 [![Build Status](https://travis-ci.org/phonectas/async-soap-client.svg?branch=master)](https://travis-ci.org/phonectas/async-soap-client)
+[![Coverage Status](https://coveralls.io/repos/github/phonectas/async-soap-client/badge.svg?branch=master)](https://coveralls.io/github/phonectas/async-soap-client?branch=master)
 
 Yes there are a couple of these clients around, but most of them are quite heavy handed in how they enforce the SOAP standard which makes them quite difficult to use.
 I have tried to implement this client in a more flexible manner with minimal functionality which means that you can probably bend it in any way you choose to bend it depending on your use case.
