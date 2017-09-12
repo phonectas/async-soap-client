@@ -14,8 +14,10 @@ cache:
     - vendor
 
 install:
-  - composer install --dev
+  - composer install --dev  --no-interaction
 
 script:
   - ./phplint.sh
-  - vendor/bin/phpunit -c phpunit.xml.dist
+  - vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/logs/clover.xml
+after_success:
+  - travis_retry php vendor/bin/coveralls -v

@@ -8,7 +8,8 @@
 		"php": ">=5.5.9",
 		"guzzlehttp/guzzle": "^6.2",
 		"monolog/monolog": "^1.23",
-		"guzzlehttp/streams": "^3.0"
+		"guzzlehttp/streams": "^3.0",
+		"php-coveralls/php-coveralls": "^1.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.8"
@@ -20,7 +21,7 @@
 	},
 	"scripts": {
 		"syntax": "bash ./phplint.sh",
-		"test": "bash vendor/bin/phpunit -c phpunit.xml.dist",
-		"post-install-cmd": "vendor/bin/phpunit -c phpunit.xml.dist"
+		"test": "bash vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/logs/clover.xml",
+		"post-install-cmd": "vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/logs/clover.xml"
 	}
 }
