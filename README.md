@@ -98,3 +98,16 @@ Here is how you can add a your owen soap xml handler or log handler
 		$stack 
 	);
 ```
+
+Here is how you can format the request body differently
+```php
+    $client = Client::createInstance(
+		'https://example.com/api/service?wsdl', //soap api path
+		'http://example.com', //soap namespace
+		'logs/api-consumer.log'
+    );
+    // $factory has to implement Phonect\SOAP\RequestCreate interface
+    $factory = new RequestFactory();
+    
+    $client->setBodyFactory($factory);
+```

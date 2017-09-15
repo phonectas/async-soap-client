@@ -7,7 +7,7 @@ use GuzzleHttp\Middleware;
 class Client {
 		private static $logger;
 		private static $baseUri;
-		private $xmlns;
+		private $bodyFactory;
 		private $client;
 		
 		/**
@@ -45,8 +45,12 @@ class Client {
 			if ($handler) {
 				$config['handler'] = $handler;
 			}
-			$this->xmlns = $xmlns;
+			$this->setBodyFactory(new SoapRequestBodyFactory($xmlns));
 			$this->client = new \GuzzleHttp\Client($config);
+		}
+
+		public function setBodyFactory(RequestCreate $bodyFactory) {
+			$this->bodyFactory = $bodyFactory;
 		}
 		
 		/**
@@ -81,7 +85,7 @@ class Client {
 			
 			$promise = $this->client->requestAsync('POST', self::$baseUri,
 				[
-					'body'    => self::createSOAPEnvelope($method, $params, $this->xmlns),
+					'body'    => $this->bodyFactory->create($method, $params),
 					'headers' => [
 						'User-Agent' => 'Workflow Phonect SOAP client',
 						'Origin' => \parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),
