@@ -77,4 +77,8 @@ class ClientTest extends TestCase
 			(string)$response2->getBody());
 		$this->assertEquals((object)array('return' => 335), $response2->getBody()->soapSerialize());
 	}
+
+	public function testPost() {
+		@$this->assertEquals(null, Client::post());
+	}
 }

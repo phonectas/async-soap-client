@@ -106,7 +106,7 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
             [
                 'expectedArray' => null,
                 'string' => '',
-            ],
+            ]
         ];
     }
 
@@ -117,6 +117,42 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
     {
         $jsonStream = $this->getSoapStream('words');
         $jsonStream->soapSerialize();
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @dataProvider dataSoapSerializeException
+     * 
+     */
+    public function testSoapSerializeRuntimeException($expectedArray, $string)
+    {
+        $expectedObject = $expectedArray ? (object) $expectedArray : null;
+        $soapStream = $this->getSoapStream($string);
+        $object = $soapStream->soapSerialize();
+
+        $this->assertEquals($expectedObject, $object);
+    }
+
+    public static function dataSoapSerializeException()
+    {
+        return [
+            [
+                'expectedArray' => ['return' => [
+                    'person' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123],
+                    'admin' => ['name' => ['first' => 'Phonect', 'last' => 'Nisse'],'id' => 123]
+                ]],
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+            <return>
+            <person><name><first>Phonect</first><0>Nisse</0></name><id>123</id></person>
+            <admin><name><first>Phonect</first><1>Nisse</1></name><id>123</id></admin>
+            </return>
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ]
+        ];
     }
 
     protected function getSoapStream($string)
