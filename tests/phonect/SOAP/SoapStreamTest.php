@@ -105,6 +105,25 @@ class SoapStreamTest extends PHPUnit_Framework_TestCase
             ],
             [
                 'expectedArray' => null,
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ],
+            [
+                'expectedArray' => null,
+                'string' => '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:addPersonResponse xmlns:ns2="http://service.phonect.no/">
+        <return></return>
+        </ns2:addPersonResponse>
+    </soap:Body>
+</soap:Envelope>',
+            ],
+            [
+                'expectedArray' => null,
                 'string' => '',
             ]
         ];
