@@ -7,6 +7,7 @@ Yes there are a couple of these clients around, but most of them are quite heavy
 I have tried to implement this client in a more flexible manner with minimal functionality which means that you can probably bend it in any way you choose to bend it depending on your use case.
 
 The client uses Guzzle and Guzzle promises to make soap requests.
+
 see: [async-requests](http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests);
 
 ### Install composer:
