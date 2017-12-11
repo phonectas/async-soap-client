@@ -90,7 +90,7 @@ class Client {
 						'Origin' => \parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),
 						'Accept' => '*/*',
 						'Content-Type' => 'text/xml; charset="UTF-8"',
-						'SOAPAction' => ''
+						'SOAPAction' => '',
 						'track_app' => $_SERVER["HTTP_HOST"],
 						'track_ip' => self::getUserIP(),
 						'phonect-req-id' => uniqid('wf_')
