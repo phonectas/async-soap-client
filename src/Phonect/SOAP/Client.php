@@ -19,12 +19,12 @@ class Client {
 		 * @param int 	 $timeout
 		 * @return Phonect\SOAP\Client
 		 */
-		public static function createInstance($baseUri, $xmlns, $logFile, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
+		public static function createInstance($baseUri, $xmlns, $logFile, $orderid = '', $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
 			self::$baseUri = $baseUri;
 			return new self($baseUri, $xmlns, self::createHandlerStack([
 				'{method} {uri} HTTP/{version}',
 				'RESPONSE: {code}'
-			], $logFile), $connectionTimeout, $readTimeout, $timeout);
+			], $logFile), $orderid, $connectionTimeout, $readTimeout, $timeout);
 		} //GuzzleHttp\HandlerStack
 		
 		/**
@@ -35,7 +35,7 @@ class Client {
 		 * @param int 					  $readTimeout
 		 * @param int 	 				  $timeout
 		 */
-		public function __construct($baseUri, $xmlns, $handler = null, $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
+		public function __construct($baseUri, $xmlns, $handler = null, $orderid = '', $connectionTimeout = 60, $readTimeout = 180, $timeout = 240) {
 			$config = [
 				'base_uri' => self::$baseUri,
 				'connection_timeout' =>  $connectionTimeout,
@@ -47,6 +47,7 @@ class Client {
 			}
 			$this->setBodyFactory(new SoapRequestBodyFactory($xmlns));
 			$this->client = new \GuzzleHttp\Client($config);
+			$this->orderid = $orderid;
 		}
 
 		public function setBodyFactory(RequestCreate $bodyFactory) {
@@ -93,7 +94,8 @@ class Client {
 						'SOAPAction' => '',
 						'track_app' => $_SERVER["HTTP_HOST"],
 						'track_ip' => self::getUserIP(),
-						'phonect-req-id' => uniqid('wf_')
+						'phonect-req-id' => uniqid('wf_'),
+						'phonect-order-id' => $this->orderid
 					]
 				]
 			);
