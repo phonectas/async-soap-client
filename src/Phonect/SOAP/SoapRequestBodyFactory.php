@@ -39,7 +39,7 @@ class SoapRequestBodyFactory implements RequestCreate{
 	private static function arrayToXml( $data, &$xml_data ) {
 		foreach( $data as $key => $value ) {
 			if( is_numeric($key) ){
-				$key = 'item'.$key; //dealing with <0/>..<n/> issues
+				$key = $xml_data->getName(); // assume that the name of each property in soap array is the same as the parent name
 			}
 			if( is_array($value) ) {
 				$subnode = $xml_data->addChild($key);
