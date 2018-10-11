@@ -3,12 +3,14 @@ namespace Phonect\SOAP;
 use GuzzleHttp\Promise\FulfilledPromise;
 use Psr\Http\Message\ResponseInterface as Response;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Exception\BadResponseException as BadResponseException;
 
 class Client {
 		private static $logger;
 		private static $baseUri;
 		private $bodyFactory;
 		private $client;
+		private $POST = 'POST';
 		
 		/**
 		 * @param string $baseUri
@@ -62,6 +64,7 @@ class Client {
 		}
 		
 		/**
+		 * IMPORTANT - support this method until we can refactor all usages.
 		 * Convienience method for using soap actions directly on the client.
 		 * @example ```php Phonect\SOAP\Client::getClient()->soapAction($parameters);```
 		 * @param string $soapAction the SOAP action
@@ -70,7 +73,44 @@ class Client {
 		 */
 		public function __call($soapAction, $arguments) {
 			$parameters = empty($arguments) ? array() : $arguments[0];
-			return $this->post($soapAction, $parameters);
+			return $this->sendAsyncRequest($soapAction, $parameters, $this->POST);
+		}
+
+		/**
+		 * Method for posting synchronous requests
+		 * @example ```php Phonect\SOAP\Client::getClient()->post($soapAction, $parameters);```
+		 * @param string $soapAction the SOAP action
+		 * @param array $arguments   the method arguments
+		 * @return Promise @see http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests
+		 */
+		public function postAsync($soapAction, $arguments) {
+			try {
+				$parameters = empty($arguments) ? array() : $arguments;
+				return $this->sendAsyncRequest($soapAction, $parameters, $this->POST);
+			}
+			catch (BadResponseException $e) {
+				throw $e;
+			}
+		}
+
+		/**
+		 * Method for posting asynchronous requests
+		 * @example ```php Phonect\SOAP\Client::getClient()->postAsync($soapAction, $parameters);```
+		 * @param string $soapAction the SOAP action
+		 * @param array $arguments   the method arguments
+		 * @return Promise @see http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests
+		 */
+		public function postSync($soapAction, $arguments) {
+			try {
+				$promise = $this->postAsync($soapAction, $arguments)->then(function($result) {
+					return $result;
+				});
+				$result = $promise->wait();
+				return $result;
+			}
+			catch (BadResponseException $e) {
+				throw $e;
+			}
 		}
 		
 		/**
@@ -79,15 +119,15 @@ class Client {
 		 * @param  array  $params parameters to post
 		 * @return Promise @see http://docs.guzzlephp.org/en/stable/quickstart.html#async-requests
 		 */
-		public function post($method, $params) {
+		public function sendAsyncRequest($method, $params, $requestType) {
 			if (!$this->client) {
 				return;
 			}
-			$promise = $this->client->requestAsync('POST', self::$baseUri,
+			$promise = $this->client->requestAsync($requestType, self::$baseUri,
 				[
 					'body'    => $this->bodyFactory->create($method, $params),
 					'headers' => [
-						'User-Agent' => 'Workflow Phonect SOAP client',
+						'User-Agent' => 'Phonect SOAP client',
 						'Origin' => \parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),
 						'Accept' => '*/*',
 						'Content-Type' => 'text/xml; charset="UTF-8"',
