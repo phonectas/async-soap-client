@@ -76,6 +76,20 @@ class Client {
 			return $this->sendAsyncRequest($soapAction, $parameters, $this->POST);
 		}
 
+		private function rethrowException($e) {
+			if (strpos($e, "soap:Envelope")) {
+				$xml = (string) $e->getResponse()->getBody();
+				$sxml = simplexml_load_string($xml)->children('http://schemas.xmlsoap.org/soap/envelope/');
+				$faultObject = $sxml->Body->Fault->children();
+				$faultcode = (string) $faultObject->faultcode == "soap:Client" ? 500 : (string) $faultObject->faultcode;
+				throw new \Exception((string) $faultObject->faultstring, $faultcode);
+			}
+			else {
+				$faultcode = $e->getCode() == 0 ? 500 : $e->getCode();
+				throw new \Exception($e->getMessage(), $faultcode);
+			}
+		}
+
 		/**
 		 * Method for posting synchronous requests
 		 * @example ```php Phonect\SOAP\Client::getClient()->post($soapAction, $parameters);```
@@ -89,7 +103,7 @@ class Client {
 				return $this->sendAsyncRequest($soapAction, $parameters, $this->POST);
 			}
 			catch (BadResponseException $e) {
-				throw $e;
+				throw $this->rethrowException($e);
 			}
 		}
 
@@ -109,7 +123,7 @@ class Client {
 				return $result;
 			}
 			catch (BadResponseException $e) {
-				throw $e;
+				throw $this->rethrowException($e);
 			}
 		}
 		
