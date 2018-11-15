@@ -20,6 +20,8 @@ class ClientTest extends TestCase
 		);
 
 		$_SERVER['REQUEST_URI'] = 'https://www.example.com/phonect-api/PhonectAPIService?wsdl';
+		$_SERVER['HTTP_HOST'] = '';
+		$_SERVER['REMOTE_ADDR'] = '';
 		$body = \GuzzleHttp\Stream\Stream::factory(
 		'<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 			<soap:Body>

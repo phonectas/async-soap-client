@@ -19,6 +19,9 @@
 			"Phonect": "src"
 		}
 	},
+	"config": {
+		"php": "5.5.38"
+	},
 	"scripts": {
 		"syntax": "bash ./phplint.sh",
 		"test": "bash vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/logs/clover.xml",
