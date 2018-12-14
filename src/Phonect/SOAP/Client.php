@@ -81,7 +81,8 @@ class Client {
 				$xml = (string) $e->getResponse()->getBody();
 				$sxml = simplexml_load_string($xml)->children('http://schemas.xmlsoap.org/soap/envelope/');
 				$faultObject = $sxml->Body->Fault->children();
-				$faultcode = (string) $faultObject->faultcode == "soap:Client" ? 500 : (string) $faultObject->faultcode;
+				// $faultcode = (string) $faultObject->faultcode == "soap:Client" ? 500 : (string) $faultObject->faultcode;
+				$faultcode = 500; // just hardcode to 500, better than running into a runtime error
 				throw new \Exception((string) $faultObject->faultstring, $faultcode);
 			}
 			else {
